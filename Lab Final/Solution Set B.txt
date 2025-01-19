@@ -1,0 +1,58 @@
+class Linear:
+    def __init__(self, a, b):
+        self.result = {0: 1}
+        self.__a = 5
+        self.__b = b        
+    def find(self):
+        self.result[1] = self.geta() - self.getb()
+        return self.result[1]
+    def geta(self):
+        return self.__a
+    def getb(self):
+        return self.__b
+    def seta(self, a):
+        self.__a = a
+    def setb(self, b):
+        self.__b = b
+    def __str__(self):
+        return 'Result: ' + str(self.result)
+
+class Ordered(Linear):
+    def __init__(self, a, b, o):
+        super().__init__(a, b)
+        self.seta(a)
+        self.order = o
+        if self.order > 0:
+            super().find()
+
+    def find(self):
+        for i in range(2, self.order + 1):      
+            self.result[i] = self.result[i-1] * super().find()
+
+    def __str__(self):
+        return 'Upto order:' + str(self.order) + '\n' + super().__str__()
+        
+    def __add__(self, l):
+        u = Ordered(0, 0, 0)
+        if len(self.result) > len(l.result):
+            r = l.order
+            u.order = self.order
+            u.result = self.result
+        else:
+            r = self.order
+            u.order = l.order
+            u.result = l.result
+        for i in range(r + 1):
+            u.result[i] = self.result[i] + l.result[i]
+        return u
+
+a = Ordered(-1, -3, 3)
+a.find()
+print(a)
+print("=============( 01 )=============")
+b = Ordered(1, 2, 2)
+b.find()
+print(b)
+print("=============( 02 )=============")
+print(a + b)
+print("=============( 03 )=============")
